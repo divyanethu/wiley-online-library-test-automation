@@ -1,0 +1,45 @@
+const { test, expect } = require('@playwright/test');
+
+// Test Case 1: Login Authentication
+test('verify login with valid credentials', async ({ page }) => {
+  await page.goto('https://onlinelibrary.wiley.com/');
+  
+  // Click on login button
+  await page.click('text=Sign in');
+
+  // Fill out username and password
+  await page.fill('input[name="username"]', 'valid_user');
+  await page.fill('input[name="password"]', 'valid_password');
+
+  // Submit login form
+  await page.click('button[type="submit"]');
+  
+  // Assert user is logged in
+  await expect(page.locator('text=Welcome')).toBeVisible();
+});
+
+// Test Case 2: Search Functionality
+test('verify search returns relevant books', async ({ page }) => {
+  await page.goto('https://onlinelibrary.wiley.com/');
+
+  // Perform a search
+  await page.fill('[name="search"]', 'Machine Learning');
+  await page.click('button[type="submit"]');
+
+  // Assert that search results are relevant
+  await expect(page.locator('.search-results')).toContainText('Machine Learning');
+});
+
+// Test Case 3: Browse Categories
+test('verify browsing through categories', async ({ page }) => {
+  await page.goto('https://onlinelibrary.wiley.com/');
+
+  // Hover over categories dropdown
+  await page.hover('text=Browse');
+
+  // Click on a category, e.g., "Computer Science"
+  await page.click('text=Computer Science');
+
+  // Assert that category page loads
+  await expect(page.locator('h1')).toHaveText('Computer Science');
+});
